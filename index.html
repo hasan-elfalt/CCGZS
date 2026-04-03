@@ -1,546 +1,755 @@
-import React, { useState } from 'react';
-import { 
-  Menu, X, BookOpen, Users, Phone, Home, 
-  ChevronLeft, Download, MessageCircle, Facebook, 
-  Globe, ArrowLeft, Mail, MapPin
-} from 'lucide-react';
-
-const App = () => {
-  const [currentPage, setCurrentPage] = useState('home');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState(null);
-
-  // --- البيانات الوهمية (Mock Data) ---
-  const teamMembers = [
-    { id: 1, name: 'د. أحمد محمود', role: 'المدير التنفيذي وباحث رئيسي', bio: 'متخصص في علم الاجتماع الرقمي وتأثير التقنية على سلوكيات الشباب.', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=300&h=300' },
-    { id: 2, name: 'أ. سارة عبد الرحمن', role: 'محلل بيانات كمية', bio: 'خبيرة في استطلاعات الرأي وتحليل البيانات الديموغرافية لجيل زد في أفريقيا.', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=300&h=300' },
-    { id: 3, name: 'أ. كريم حسن', role: 'باحث في الأنثروبولوجيا الثقافية', bio: 'يركز على الثقافات الفرعية وأنماط الاستهلاك الثقافي للشباب في الشرق الأوسط.', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300&h=300' },
-  ];
-
-  const articles = [
-    { 
-      id: 1, 
-      title: 'تأثير الذكاء الاصطناعي على الخيارات المهنية لجيل زد في مصر', 
-      category: 'دراسة استقصائية',
-      date: '١٢ مارس ٢٠٢٦',
-      summary: 'تبحث هذه الدراسة في كيفية إعادة تشكيل أدوات الذكاء الاصطناعي التوليدي لتطلعات الشباب المصري المهنية، وتأثيرها على اختيار التخصصات الجامعية.',
-      content: 'في ظل التحولات التكنولوجية المتسارعة التي يشهدها العالم، يبرز الذكاء الاصطناعي كعامل حاسم في إعادة صياغة سوق العمل المستقبلي. تستند هذه الدراسة إلى استطلاع رأي شمل أكثر من ٥٠٠٠ شاب وشابة من جيل زد في مصر، لتحليل مدى وعيهم بمتطلبات السوق الجديدة. أظهرت النتائج تحولاً كبيراً في التفضيلات المهنية، حيث تراجعت الرغبة في الوظائف التقليدية لصالح التخصصات التقنية والإبداعية التي يصعب على الآلة محاكاتها بالكامل. كما تناقش الدراسة التحديات التي تواجه المؤسسات التعليمية في مواكبة هذا التحول السريع، وتقدم توصيات لصناع السياسات لتطوير مناهج تعليمية تعزز من مهارات التفكير النقدي والمرونة المعرفية.',
-      author: 'د. أحمد محمود',
-      hasPdf: true,
-      image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800&h=400'
-    },
-    { 
-      id: 2, 
-      title: 'أنماط الاستهلاك الرقمي للشباب في دول شمال أفريقيا', 
-      category: 'تقرير تحليلي',
-      date: '٠٥ فبراير ٢٠٢٦',
-      summary: 'تحليل معمق لساعات استخدام منصات التواصل الاجتماعي والمنصات الترفيهية، وتأثيرها على الصحة النفسية والتفاعل الاجتماعي.',
-      content: 'يسلط هذا التقرير التحليلي الضوء على العادات اليومية لجيل زد في استهلاك المحتوى الرقمي عبر شمال أفريقيا، مع التركيز على منصات الفيديو القصير والألعاب التفاعلية. من خلال تتبع وتحليل البيانات السلوكية، يتضح أن هناك ارتباطاً وثيقاً بين ساعات التعرض للشاشات ومستويات القلق الاجتماعي والعزلة. يقدم التقرير مقارنة شاملة بين دول المنطقة، ويبرز الاختلافات الثقافية التي تلعب دوراً في تحديد نوعية المحتوى المفضل. ويختتم التقرير باقتراح آليات لتعزيز "الرفاهية الرقمية" والوعي الذاتي لدى الشباب للتعامل مع الفضاء الإلكتروني بشكل أكثر صحة وتوازناً.',
-      author: 'أ. سارة عبد الرحمن',
-      hasPdf: true,
-      image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800&h=400'
-    },
-    { 
-      id: 3, 
-      title: 'جيل زد والمشاركة السياسية: بين العزوف وإعادة التعريف', 
-      category: 'مقال بحثي',
-      date: '٢٠ يناير ٢٠٢٦',
-      summary: 'قراءة في مفهوم المشاركة السياسية والمجتمعية لدى الشباب، وكيف انتقل التركيز من الساحات التقليدية إلى الفضاءات الرقمية والحملات الإلكترونية.',
-      content: 'غالباً ما يُتهم جيل زد بالعزوف عن المشاركة في الحياة السياسية والعامة بمفهومها الكلاسيكي، إلا أن هذا المقال يجادل بأن هذا الجيل لم يعزف عن المشاركة، بل قام بإعادة تعريفها لتتناسب مع أدواته وقناعاته. يميل الشباب اليوم إلى الانخراط في القضايا ذات البعد الإنساني والبيئي المباشر، مستخدمين وسائل التواصل الاجتماعي كمنصات للحشد والتوعية والضغط. نستعرض في هذا المقال نماذج لحملات رقمية قادها شباب من جيل زد في الشرق الأوسط نجحت في تغيير قرارات مؤسسية، مما يؤكد أننا أمام شكل جديد ومرن من أشكال الفاعلية المجتمعية التي تتجاوز الأطر الحزبية التقليدية.',
-      author: 'أ. كريم حسن',
-      hasPdf: false,
-      image: 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=800&h=400'
-    }
-  ];
-
-  // --- مكونات واجهة المستخدم ---
-
-  const Navigation = () => (
-    <nav className="bg-slate-900 text-white sticky top-0 z-50 shadow-lg border-b border-teal-500/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
-            <div className="bg-teal-500 p-2 rounded-lg">
-              <Globe className="h-8 w-8 text-slate-900" />
-            </div>
-            <div>
-              <h1 className="font-bold text-xl md:text-2xl tracking-tight">مركز القاهرة لدراسات <span className="text-teal-400">جيل زد</span></h1>
-              <p className="text-xs text-slate-400 mt-1 font-sans tracking-wide" dir="ltr">Cairo Center for Gen Z Studies (CCGZS)</p>
-            </div>
-          </div>
-          
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-6 space-x-reverse">
-              {[
-                { id: 'home', name: 'الرئيسية', icon: Home },
-                { id: 'about', name: 'عن المركز', icon: BookOpen },
-                { id: 'research', name: 'الأبحاث والدراسات', icon: BookOpen },
-                { id: 'team', name: 'فريق العمل', icon: Users },
-                { id: 'contact', name: 'التواصل', icon: Phone },
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => { setCurrentPage(item.id); setSelectedArticle(null); }}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    currentPage === item.id 
-                      ? 'bg-slate-800 text-teal-400 border-b-2 border-teal-400' 
-                      : 'text-gray-300 hover:bg-slate-800 hover:text-white'
-                  }`}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.name}
-                </button>
-              ))}
-              {/* زر تغيير اللغة (مستقبلي) */}
-              <button className="flex items-center gap-1 px-3 py-1 rounded-full border border-slate-600 text-xs text-slate-300 hover:border-teal-400 hover:text-teal-400 transition-colors">
-                English
-              </button>
-            </div>
-          </div>
-          
-          <div className="-mr-2 flex md:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-slate-800 focus:outline-none"
-            >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-slate-800 border-b border-teal-500/30">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {[
-              { id: 'home', name: 'الرئيسية' },
-              { id: 'about', name: 'عن المركز' },
-              { id: 'research', name: 'الأبحاث والدراسات' },
-              { id: 'team', name: 'فريق العمل' },
-              { id: 'contact', name: 'التواصل' },
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setCurrentPage(item.id);
-                  setSelectedArticle(null);
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 ${
-                  currentPage === item.id ? 'text-teal-400 bg-slate-900' : 'text-gray-300 hover:text-white hover:bg-slate-700'
-                }`}
-              >
-                {item.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </nav>
-  );
-
-  const HomeSection = () => (
-    <div className="animate-in fade-in duration-700">
-      {/* القسم البطل (Hero Section) */}
-      <div className="relative bg-slate-900 text-white overflow-hidden border-b-8 border-teal-500">
-        <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center"></div>
-        <div className="absolute inset-0 bg-gradient-to-l from-slate-900 via-slate-900/90 to-transparent"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="max-w-2xl">
-            <span className="inline-block py-1 px-3 rounded-full bg-teal-500/20 text-teal-400 text-sm font-semibold mb-4 border border-teal-500/50">
-              مؤسسة بحثية مصرية - CCGZS
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-              نفهم المستقبل..<br/>
-              نقرأ <span className="text-teal-400">جيل زد</span> بعمق.
-            </h1>
-            <p className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed">
-              مركز القاهرة لدراسات جيل زد هو المركز الأول من نوعه في مصر المتخصص في دراسة وتحليل سلوكيات، وتوجهات، وتطلعات الجيل الصاعد في منطقة الشرق الأوسط وأفريقيا، لتقديم رؤى استراتيجية مبنية على الأدلة لصناع القرار والمجتمع الأكاديمي.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <button onClick={() => setCurrentPage('research')} className="bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3 px-8 rounded-lg shadow-lg shadow-teal-500/30 transition-all duration-300 flex items-center gap-2">
-                تصفح الإصدارات <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button onClick={() => setCurrentPage('about')} className="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300">
-                تعرف علينا
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* أحدث الأبحاث السريعة */}
-      <div className="py-16 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-10">
-            <div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-2">أحدث الإصدارات</h2>
-              <div className="w-20 h-1 bg-teal-500 rounded"></div>
-            </div>
-            <button onClick={() => setCurrentPage('research')} className="text-teal-600 hover:text-teal-800 font-semibold flex items-center gap-1">
-              عرض الكل <ChevronLeft className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.slice(0, 3).map((article) => (
-              <div key={article.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col cursor-pointer border border-slate-100" onClick={() => { setSelectedArticle(article); setCurrentPage('article-detail'); }}>
-                <div className="h-48 overflow-hidden relative">
-                  <div className="absolute top-4 right-4 bg-slate-900 text-teal-400 text-xs font-bold px-3 py-1 rounded-full z-10">
-                    {article.category}
-                  </div>
-                  <img src={article.image} alt={article.title} className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="p-6 flex-grow flex flex-col">
-                  <div className="text-sm text-gray-500 mb-2">{article.date}</div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3 leading-snug">{article.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">{article.summary}</p>
-                  <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-sm font-medium text-slate-700">{article.author}</span>
-                    <span className="text-teal-600 text-sm font-semibold flex items-center">اقرأ المزيد <ChevronLeft className="w-4 h-4 ml-1" /></span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const AboutSection = () => (
-    <div className="py-16 bg-white animate-in slide-in-from-bottom-8 duration-500">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">عن مركز القاهرة لدراسات جيل زد</h2>
-          <div className="w-24 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
-        </div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز القاهرة لدراسات جيل زد - CCGZS</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Cairo -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
         
-        <div className="prose prose-lg prose-slate rtl:prose-p:text-right rtl:prose-headings:text-right max-w-none text-gray-700 leading-relaxed text-justify">
-          <p className="mb-6 text-xl font-medium text-slate-800">
-            <strong className="text-teal-700">مركز القاهرة لدراسات جيل زد (Cairo Center for Gen Z Studies - CCGZS)</strong> هو مؤسسة بحثية وفكرية مصرية مستقلة، تأسست بهدف سد الفجوة المعرفية العميقة المتعلقة بفهم وتحليل خصائص، ودوافع، وتوجهات الجيل الصاعد (الجيل Z) في النطاق الجغرافي للشرق الأوسط والقارة الأفريقية، باعتبارهم القوة الديموغرافية المحركة للمستقبل.
-          </p>
-          <div className="bg-slate-50 border-r-4 border-teal-500 p-6 rounded-l-lg mb-8 shadow-sm">
-            <h3 className="text-2xl font-bold text-slate-900 mb-3 flex items-center gap-2"><BookOpen className="text-teal-500 w-6 h-6"/> رسالتنا</h3>
-            <p className="m-0">
-              تقديم إنتاج أكاديمي وتحليلي رصين، يعتمد على أحدث المنهجيات الكمية والكيفية في استطلاع الآراء وتحليل البيانات الضخمة، لإنتاج معرفة دقيقة وموثوقة تسهم في توجيه صناع القرار، والمؤسسات التعليمية، والكيانات الاقتصادية نحو بناء سياسات واستراتيجيات تتناغم مع تطلعات هذا الجيل وتستثمر طاقاته الكامنة.
-            </p>
-          </div>
-          <h3 className="text-2xl font-bold text-slate-900 mb-4 mt-8">رؤيتنا الاستراتيجية</h3>
-          <p className="mb-6">
-            نطمح لأن نكون المرجعية المعرفية الأولى والمظلة البحثية الأهم في المنطقة لكل ما يتعلق بدراسات الشباب الحديثة، وأن نلعب دوراً محورياً في بناء جسور من الفهم المشترك بين الأجيال المختلفة، متجاوزين الصور النمطية السطحية، لنغوص في أعماق التحولات الثقافية، والاقتصادية، والتكنولوجية التي تشكل وجدان وعقلية الشباب في مجتمعاتنا النامية والمتحولة ببطء نحو الرقمنة الشاملة.
-          </p>
-          <h3 className="text-2xl font-bold text-slate-900 mb-4 mt-8">محاور العمل الأساسية</h3>
-          <ul className="list-disc list-inside space-y-3 mb-8 marker:text-teal-500">
-            <li>رصد وتحليل تأثير التطورات التكنولوجية المتسارعة على البنية النفسية والاجتماعية للشباب.</li>
-            <li>دراسة التحولات في أسواق العمل وأنماط التوظيف المفضلة واستعدادات الجيل الجديد للمهن المستقبلية.</li>
-            <li>تحليل الخطاب الرقمي وأنماط التعبير الثقافي والسياسي للشباب عبر منصات التواصل الاجتماعي.</li>
-            <li>إصدار تقارير دورية ومؤشرات قياس متخصصة ترصد اتجاهات وقيم جيل زد في الدول المستهدفة.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-
-  const ResearchSection = () => (
-    <div className="py-16 bg-slate-50 min-h-screen animate-in fade-in duration-500">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">الأبحاث والدراسات</h2>
-          <div className="w-24 h-1.5 bg-teal-500 rounded-full"></div>
-          <p className="mt-4 text-gray-600 text-lg">مكتبة شاملة تضم أحدث الإصدارات، والتقارير التحليلية، والمقالات الأكاديمية الصادرة عن باحثي المركز.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articles.map((article) => (
-            <div key={article.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col">
-              <div className="h-56 overflow-hidden relative">
-                <div className="absolute top-4 right-4 bg-slate-900/90 backdrop-blur-sm text-teal-400 text-xs font-bold px-3 py-1.5 rounded-full z-10 shadow-lg">
-                  {article.category}
-                </div>
-                <img src={article.image} alt={article.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out" />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                  <button onClick={() => { setSelectedArticle(article); setCurrentPage('article-detail'); }} className="text-white font-bold flex items-center gap-2 hover:text-teal-400">
-                    قراءة كاملة <ArrowLeft className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-              <div className="p-6 flex-grow flex flex-col">
-                <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                  <span>{article.date}</span>
-                  <span>•</span>
-                  <span className="font-medium text-teal-700">{article.author}</span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3 leading-snug cursor-pointer hover:text-teal-600 transition-colors" onClick={() => { setSelectedArticle(article); setCurrentPage('article-detail'); }}>
-                  {article.title}
-                </h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">{article.summary}</p>
-                {article.hasPdf && (
-                  <div className="mt-auto pt-4 border-t border-gray-100 flex justify-end">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded">
-                      <Download className="w-3.5 h-3.5" /> متاح بصيغة PDF
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const ArticleDetailView = () => {
-    return (
-    <div className="py-12 bg-white min-h-screen animate-in slide-in-from-right-8 duration-500">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <button 
-          onClick={() => { setSelectedArticle(null); setCurrentPage('research'); }}
-          className="mb-8 flex items-center gap-2 text-slate-500 hover:text-teal-600 font-medium transition-colors bg-slate-50 px-4 py-2 rounded-lg hover:bg-teal-50 w-fit"
-        >
-          <ChevronLeft className="w-5 h-5" /> العودة إلى قائمة الأبحاث
-        </button>
+        body {
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+            background-color: #ffffff;
+        }
         
-        <div className="mb-10">
-          <div className="flex items-center gap-3 mb-4 text-sm font-semibold">
-            <span className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full">{selectedArticle.category}</span>
-            <span className="text-gray-500">{selectedArticle.date}</span>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-            {selectedArticle.title}
-          </h1>
-          <div className="flex items-center gap-4 text-slate-700 pb-8 border-b border-gray-200">
-            <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold">
-              {selectedArticle.author.charAt(0)}
-            </div>
-            <div>
-              <p className="font-bold text-lg">{selectedArticle.author}</p>
-              <p className="text-sm text-gray-500">باحث في مركز القاهرة لدراسات جيل زد (CCGZS)</p>
-            </div>
-          </div>
-        </div>
+        /* Animations */
+        .fade-in { animation: fadeIn 0.6s ease-in-out; }
+        .slide-in-up { animation: slideInUp 0.6s ease-out; }
+        .slide-in-right { animation: slideInRight 0.5s ease-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
 
-        <div className="relative mb-12 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
-          <img src={selectedArticle.image} alt="صورة المقال" className="w-full h-auto max-h-[500px] object-cover" />
-        </div>
+        /* Utility classes for JS manipulation */
+        .hidden { display: none !important; }
+        .active-nav-link {
+            background-color: #1e293b !important; /* bg-slate-800 */
+            color: #2dd4bf !important; /* text-teal-400 */
+            border-bottom: 2px solid #2dd4bf !important;
+        }
 
-        <div className="prose prose-lg prose-slate rtl:prose-p:text-right max-w-none text-gray-700 leading-loose text-justify mb-16">
-          <p className="text-xl text-slate-800 font-medium bg-slate-50 p-6 rounded-r-xl border-r-4 border-slate-300 mb-8">
-            {selectedArticle.summary}
-          </p>
-          <p>
-            {selectedArticle.content}
-          </p>
-          {/* محتوى وهمي إضافي لإظهار شكل المقال الطويل */}
-          <p className="mt-6">
-            وتشير الإحصائيات الأولية إلى أن الشريحة الأكبر من المستطلعة آراؤهم تميل إلى الاعتماد على المصادر المفتوحة والتعلم الذاتي كبديل جزئي أو كلي للمسارات الأكاديمية التقليدية التي يواجهون فيها بطئاً في التحديث والتطوير المستمر. هذا التوجه لا يعكس فقط تمرداً على الأطر الكلاسيكية، بل هو استجابة براغماتية لمتطلبات سوق عمل ديناميكي لا يعترف بالشهادات الورقية بقدر اعترافه بالمهارات العملية والقدرة على التكيف السريع مع الأدوات التكنولوجية الناشئة.
-          </p>
-        </div>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="selection:bg-teal-500 selection:text-white text-right flex flex-col min-h-screen">
 
-        {selectedArticle.hasPdf && (
-          <div className="bg-slate-900 rounded-2xl p-8 text-center text-white shadow-2xl relative overflow-hidden border border-teal-500/30">
-            <div className="absolute -right-10 -top-10 opacity-10">
-              <BookOpen className="w-40 h-40" />
-            </div>
-            <div className="relative z-10 flex flex-col items-center">
-              <h3 className="text-2xl font-bold mb-3">البحث الكامل متاح للتحميل</h3>
-              <p className="text-slate-300 mb-6 max-w-lg mx-auto">
-                يمكنك الآن تحميل النسخة الكاملة من هذه الدراسة بصيغة PDF والتي تتضمن المنهجية التفصيلية، والجداول الإحصائية، والمراجع الأكاديمية كاملة.
-              </p>
-              <button className="bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold text-lg py-4 px-10 rounded-xl shadow-lg shadow-teal-500/40 transition-all duration-300 flex items-center gap-3 group">
-                <Download className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
-                تحميل الدراسة (PDF)
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-    );
-  };
-
-  const TeamSection = () => (
-    <div className="py-16 bg-white animate-in zoom-in-95 duration-500">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">فريق الباحثين والخبراء</h2>
-          <div className="w-24 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto text-lg">
-            يضم المركز نخبة متميزة من الأكاديميين والمحللين الشباب الذين يمتلكون شغفاً حقيقياً وأدوات منهجية حديثة لفك شفرات الظواهر المعقدة لجيل زد.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {teamMembers.map((member) => (
-            <div key={member.id} className="bg-slate-50 rounded-2xl p-8 text-center border border-gray-100 hover:border-teal-200 hover:shadow-xl transition-all duration-300 group">
-              <div className="relative w-40 h-40 mx-auto mb-6">
-                <div className="absolute inset-0 bg-teal-500 rounded-full blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                <img src={member.image} alt={member.name} className="relative w-40 h-40 rounded-full object-cover border-4 border-white shadow-md z-10 grayscale-[20%] group-hover:grayscale-0 transition-all duration-500" />
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">{member.name}</h3>
-              <p className="text-teal-600 font-semibold mb-4 text-sm">{member.role}</p>
-              <p className="text-gray-600 text-sm leading-relaxed">{member.bio}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const ContactSection = () => (
-    <div className="py-16 bg-slate-50 min-h-screen animate-in fade-in duration-500">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
-          
-          {/* قسم معلومات التواصل المباشر */}
-          <div className="bg-slate-900 text-white p-10 md:w-2/5 flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl"></div>
-            <div className="relative z-10">
-              <h2 className="text-3xl font-bold mb-2">تواصل معنا</h2>
-              <div className="w-16 h-1 bg-teal-500 rounded-full mb-8"></div>
-              <p className="text-gray-300 mb-10 leading-relaxed text-sm">
-                نرحب دائماً بتواصل الباحثين، المؤسسات الإعلامية، والمهتمين بشؤون الشباب. يمكنك مراسلتنا لطلب الاستشارات، إجراء المقابلات، أو اقتراح شراكات بحثية.
-              </p>
-              
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-slate-800 p-3 rounded-lg text-teal-400">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-lg">المقر الرئيسي</p>
-                    <p className="text-gray-400 text-sm">القاهرة، جمهورية مصر العربية</p>
-                  </div>
+    <!-- Navigation -->
+    <nav class="bg-slate-900 text-white sticky top-0 z-50 shadow-lg border-b border-teal-500/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+                    <div class="bg-teal-500 p-2 rounded-lg text-slate-900">
+                        <i class="fa-solid fa-globe fa-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-xl md:text-2xl tracking-tight">مركز القاهرة لدراسات <span class="text-teal-400">جيل زد</span></h1>
+                        <p class="text-xs text-slate-400 mt-1 font-sans tracking-wide" dir="ltr">Cairo Center for Gen Z Studies (CCGZS)</p>
+                    </div>
                 </div>
                 
-                <div className="flex items-start gap-4">
-                  <div className="bg-slate-800 p-3 rounded-lg text-teal-400">
-                    <Mail className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-lg">البريد الإلكتروني</p>
-                    <p className="text-gray-400 text-sm" dir="ltr">info@ccgzs.eg</p>
-                  </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-6 space-x-reverse" id="desktop-nav-links">
+                        <button onclick="navigate('home')" class="nav-btn active-nav-link flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="home">
+                            <i class="fa-solid fa-house"></i> الرئيسية
+                        </button>
+                        <button onclick="navigate('about')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="about">
+                            <i class="fa-solid fa-book-open"></i> عن المركز
+                        </button>
+                        <button onclick="navigate('research')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="research">
+                            <i class="fa-solid fa-file-alt"></i> الأبحاث والدراسات
+                        </button>
+                        <button onclick="navigate('ai-assistant')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="ai-assistant">
+                            <i class="fa-solid fa-robot"></i> المساعد البحثي ✨
+                        </button>
+                        <button onclick="navigate('team')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="team">
+                            <i class="fa-solid fa-users"></i> فريق العمل
+                        </button>
+                        <button onclick="navigate('contact')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="contact">
+                            <i class="fa-solid fa-phone"></i> التواصل
+                        </button>
+                        <!-- Language Switcher placeholder -->
+                        <button class="flex items-center gap-1 px-3 py-1 rounded-full border border-slate-600 text-xs text-slate-300 hover:border-teal-400 hover:text-teal-400 transition-colors">
+                            English
+                        </button>
+                    </div>
                 </div>
-              </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-slate-800 focus:outline-none">
+                        <i id="mobile-menu-icon" class="fa-solid fa-bars fa-lg"></i>
+                    </button>
+                </div>
             </div>
-            
-            <div className="mt-12 pt-8 border-t border-slate-700/50 relative z-10">
-              <p className="text-sm text-gray-400 mb-4">تابعنا وتواصل معنا فورياً عبر:</p>
-              <div className="flex flex-col gap-4">
-                <a href="#" className="flex items-center gap-3 bg-green-600 hover:bg-green-500 text-white py-3 px-4 rounded-xl transition-colors font-medium shadow-lg shadow-green-600/20">
-                  <MessageCircle className="w-6 h-6" />
-                  مراسلة مباشرة عبر واتساب
-                </a>
-                <a href="#" className="flex items-center gap-3 bg-blue-600 hover:bg-blue-500 text-white py-3 px-4 rounded-xl transition-colors font-medium shadow-lg shadow-blue-600/20">
-                  <Facebook className="w-6 h-6" />
-                  صفحتنا الرسمية على فيسبوك
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* نموذج إرسال رسالة (اختياري / شكلي حالياً) */}
-          <div className="p-10 md:w-3/5 bg-white">
-            <h3 className="text-2xl font-bold text-slate-900 mb-6">أرسل لنا رسالة</h3>
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل</label>
-                  <input type="text" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="الاسم ثلاثي" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
-                  <input type="email" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="mail@example.com" dir="ltr" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">الجهة / المؤسسة (اختياري)</label>
-                <input type="text" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="اسم الجامعة أو المؤسسة الصحفية" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">نص الرسالة أو الاستفسار</label>
-                <textarea rows="5" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white resize-none" placeholder="كيف يمكننا مساعدتك؟"></textarea>
-              </div>
-              <button type="button" className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 px-8 rounded-xl transition-colors shadow-lg">
-                إرسال الرسالة
-              </button>
-            </form>
-          </div>
-
         </div>
-      </div>
-    </div>
-  );
 
-  const Footer = () => (
-    <footer className="bg-slate-950 text-slate-400 py-12 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-center md:text-right">
-             <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-3 mb-4 opacity-70">
-                <Globe className="h-8 w-8 hidden md:block text-teal-500" />
-                <div>
-                  <span className="font-bold text-xl tracking-tight text-white block">مركز القاهرة لدراسات جيل زد</span>
-                  <span className="text-xs tracking-wider block mt-1 font-sans" dir="ltr">Cairo Center for Gen Z Studies (CCGZS)</span>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 border-b border-teal-500/30">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="navigate('home')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-teal-400 bg-slate-900" data-mobile-target="home">الرئيسية</button>
+                <button onclick="navigate('about')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="about">عن المركز</button>
+                <button onclick="navigate('research')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="research">الأبحاث والدراسات</button>
+                <button onclick="navigate('ai-assistant')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="ai-assistant">المساعد البحثي ✨</button>
+                <button onclick="navigate('team')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="team">فريق العمل</button>
+                <button onclick="navigate('contact')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="contact">التواصل</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+        
+        <!-- ================= HOME VIEW ================= -->
+        <div id="view-home" class="view-section fade-in">
+            <!-- Hero Section -->
+            <div class="relative bg-slate-900 text-white overflow-hidden border-b-8 border-teal-500">
+                <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center"></div>
+                <div class="absolute inset-0 bg-gradient-to-l from-slate-900 via-slate-900/90 to-transparent"></div>
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+                    <div class="max-w-2xl">
+                        <span class="inline-block py-1 px-3 rounded-full bg-teal-500/20 text-teal-400 text-sm font-semibold mb-4 border border-teal-500/50">
+                            مؤسسة بحثية مصرية - CCGZS
+                        </span>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                            نفهم المستقبل..<br/>
+                            نقرأ <span class="text-teal-400">جيل زد</span> بعمق.
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed">
+                            مركز القاهرة لدراسات جيل زد هو المركز الأول من نوعه في مصر المتخصص في دراسة وتحليل سلوكيات، وتوجهات، وتطلعات الجيل الصاعد في منطقة الشرق الأوسط وأفريقيا، لتقديم رؤى استراتيجية مبنية على الأدلة لصناع القرار والمجتمع الأكاديمي.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="navigate('research')" class="bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3 px-8 rounded-lg shadow-lg shadow-teal-500/30 transition-all duration-300 flex items-center gap-2">
+                                تصفح الإصدارات <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <button onclick="navigate('about')" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300">
+                                تعرف علينا
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <p className="text-sm">
-              © {new Date().getFullYear()} جميع الحقوق محفوظة. مركز القاهرة لدراسات جيل زد (مصر).
-            </p>
-          </div>
-          <div className="flex gap-4">
-             <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-500 hover:text-slate-900 transition-colors">
-               <Facebook className="w-5 h-5" />
-             </a>
-             <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors">
-               <MessageCircle className="w-5 h-5" />
-             </a>
-          </div>
+
+            <!-- Latest Research (Home) -->
+            <div class="py-16 bg-slate-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-end mb-10">
+                        <div>
+                            <h2 class="text-3xl font-bold text-slate-900 mb-2">أحدث الإصدارات</h2>
+                            <div class="w-20 h-1 bg-teal-500 rounded"></div>
+                        </div>
+                        <button onclick="navigate('research')" class="text-teal-600 hover:text-teal-800 font-semibold flex items-center gap-1">
+                            عرض الكل <i class="fa-solid fa-chevron-left fa-sm"></i>
+                        </button>
+                    </div>
+                    <div id="home-articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- ================= ABOUT VIEW ================= -->
+        <div id="view-about" class="view-section slide-in-up hidden py-16 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-4">عن مركز القاهرة لدراسات جيل زد</h2>
+                    <div class="w-24 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed text-justify">
+                    <p class="mb-6 text-xl font-medium text-slate-800">
+                        <strong class="text-teal-700">مركز القاهرة لدراسات جيل زد (Cairo Center for Gen Z Studies - CCGZS)</strong> هو مؤسسة بحثية وفكرية مصرية مستقلة، تأسست بهدف سد الفجوة المعرفية العميقة المتعلقة بفهم وتحليل خصائص، ودوافع، وتوجهات الجيل الصاعد (الجيل Z) في النطاق الجغرافي للشرق الأوسط والقارة الأفريقية، باعتبارهم القوة الديموغرافية المحركة للمستقبل.
+                    </p>
+                    <div class="bg-slate-50 border-r-4 border-teal-500 p-6 rounded-l-lg mb-8 shadow-sm">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-3 flex items-center gap-2"><i class="fa-solid fa-book-open text-teal-500"></i> رسالتنا</h3>
+                        <p class="m-0">
+                            تقديم إنتاج أكاديمي وتحليلي رصين، يعتمد على أحدث المنهجيات الكمية والكيفية في استطلاع الآراء وتحليل البيانات الضخمة، لإنتاج معرفة دقيقة وموثوقة تسهم في توجيه صناع القرار، والمؤسسات التعليمية، والكيانات الاقتصادية نحو بناء سياسات واستراتيجيات تتناغم مع تطلعات هذا الجيل وتستثمر طاقاته الكامنة.
+                        </p>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4 mt-8">رؤيتنا الاستراتيجية</h3>
+                    <p class="mb-6">
+                        نطمح لأن نكون المرجعية المعرفية الأولى والمظلة البحثية الأهم في المنطقة لكل ما يتعلق بدراسات الشباب الحديثة، وأن نلعب دوراً محورياً في بناء جسور من الفهم المشترك بين الأجيال المختلفة، متجاوزين الصور النمطية السطحية، لنغوص في أعماق التحولات الثقافية، والاقتصادية، والتكنولوجية التي تشكل وجدان وعقلية الشباب في مجتمعاتنا النامية والمتحولة ببطء نحو الرقمنة الشاملة.
+                    </p>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4 mt-8">محاور العمل الأساسية</h3>
+                    <ul class="list-disc list-inside space-y-3 mb-8 text-slate-700 marker:text-teal-500">
+                        <li>رصد وتحليل تأثير التطورات التكنولوجية المتسارعة على البنية النفسية والاجتماعية للشباب.</li>
+                        <li>دراسة التحولات في أسواق العمل وأنماط التوظيف المفضلة واستعدادات الجيل الجديد للمهن المستقبلية.</li>
+                        <li>تحليل الخطاب الرقمي وأنماط التعبير الثقافي والسياسي للشباب عبر منصات التواصل الاجتماعي.</li>
+                        <li>إصدار تقارير دورية ومؤشرات قياس متخصصة ترصد اتجاهات وقيم جيل زد في الدول المستهدفة.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= RESEARCH VIEW ================= -->
+        <div id="view-research" class="view-section fade-in hidden py-16 bg-slate-50 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-4">الأبحاث والدراسات</h2>
+                    <div class="w-24 h-1.5 bg-teal-500 rounded-full"></div>
+                    <p class="mt-4 text-gray-600 text-lg">مكتبة شاملة تضم أحدث الإصدارات، والتقارير التحليلية، والمقالات الأكاديمية الصادرة عن باحثي المركز.</p>
+                </div>
+                <div id="all-articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ARTICLE DETAIL VIEW ================= -->
+        <div id="view-article-detail" class="view-section slide-in-right hidden py-12 bg-white min-h-screen">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button onclick="navigate('research')" class="mb-8 flex items-center gap-2 text-slate-500 hover:text-teal-600 font-medium transition-colors bg-slate-50 px-4 py-2 rounded-lg hover:bg-teal-50 w-fit">
+                    <i class="fa-solid fa-chevron-right"></i> العودة إلى قائمة الأبحاث
+                </button>
+                
+                <div class="mb-10">
+                    <div class="flex items-center gap-3 mb-4 text-sm font-semibold">
+                        <span id="detail-category" class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full"></span>
+                        <span id="detail-date" class="text-gray-500"></span>
+                    </div>
+                    <h1 id="detail-title" class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight"></h1>
+                    
+                    <div class="flex flex-col md:flex-row md:items-center justify-between pb-8 border-b border-gray-200 gap-4">
+                        <div class="flex items-center gap-4 text-slate-700">
+                            <div id="detail-author-initial" class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold"></div>
+                            <div>
+                                <p id="detail-author" class="font-bold text-lg"></p>
+                                <p class="text-sm text-gray-500">باحث في مركز القاهرة لدراسات جيل زد (CCGZS)</p>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Summary Button -->
+                        <button onclick="generateSummary()" id="ai-summary-btn" class="flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 py-2 md:py-2 px-4 rounded-lg transition-colors font-semibold text-sm w-full md:w-auto">
+                            <i id="ai-summary-icon" class="fa-solid fa-sparkles"></i>
+                            <span id="ai-summary-text">مستخلص الذكاء الاصطناعي ✨</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Summary Output Container -->
+                <div id="ai-summary-container" class="hidden mb-8 p-6 bg-gradient-to-l from-indigo-50 to-white border-r-4 border-indigo-500 rounded-l-xl shadow-sm fade-in">
+                    <h3 class="flex items-center gap-2 text-indigo-800 font-bold text-lg mb-3">
+                        <i class="fa-solid fa-sparkles text-indigo-500"></i> أهم الاستنتاجات (بواسطة الذكاء الاصطناعي)
+                    </h3>
+                    <div id="ai-summary-content" class="text-indigo-900/80 text-sm whitespace-pre-wrap leading-relaxed"></div>
+                </div>
+
+                <div class="relative mb-12 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+                    <img id="detail-image" src="" alt="صورة المقال" class="w-full h-auto max-h-[500px] object-cover" />
+                </div>
+
+                <div class="prose prose-lg max-w-none text-gray-700 leading-loose text-justify mb-16">
+                    <p id="detail-summary" class="text-xl text-slate-800 font-medium bg-slate-50 p-6 rounded-r-xl border-r-4 border-slate-300 mb-8"></p>
+                    <p id="detail-content"></p>
+                    <p class="mt-6 text-gray-600 italic">
+                        * ملحوظة: هذا النص هو مقتطف يوضح الهيكل الأكاديمي، لتحليل أعمق والاطلاع على المنهجية الكاملة، يرجى مراجعة النسخة الأصلية من الدراسة.
+                    </p>
+                </div>
+
+                <div id="detail-pdf-container" class="hidden bg-slate-900 rounded-2xl p-8 text-center text-white shadow-2xl relative overflow-hidden border border-teal-500/30">
+                    <div class="absolute -right-10 -top-10 opacity-10">
+                        <i class="fa-solid fa-book-open text-9xl"></i>
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <h3 class="text-2xl font-bold mb-3">البحث الكامل متاح للتحميل</h3>
+                        <p class="text-slate-300 mb-6 max-w-lg mx-auto">
+                            يمكنك الآن تحميل النسخة الكاملة من هذه الدراسة بصيغة PDF والتي تتضمن المنهجية التفصيلية، والجداول الإحصائية، والمراجع الأكاديمية كاملة.
+                        </p>
+                        <button class="bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold text-lg py-4 px-10 rounded-xl shadow-lg shadow-teal-500/40 transition-all duration-300 flex items-center gap-3 group">
+                            <i class="fa-solid fa-download group-hover:-translate-y-1 transition-transform"></i>
+                            تحميل الدراسة (PDF)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= AI ASSISTANT VIEW ================= -->
+        <div id="view-ai-assistant" class="view-section fade-in hidden py-16 bg-slate-50 min-h-screen">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <div class="inline-flex items-center justify-center p-3 bg-indigo-100 text-indigo-600 rounded-full mb-4">
+                        <i class="fa-solid fa-robot fa-2xl py-2 px-1"></i>
+                    </div>
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-4">المساعد البحثي الذكي ✨</h2>
+                    <div class="w-24 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+                    <p class="mt-4 text-gray-600 text-lg max-w-2xl mx-auto">
+                        مدعوم بنماذج الذكاء الاصطناعي المتقدمة (Gemini API) لمساعدة الباحثين والطلاب على توليد أفكار بحثية، صياغة أسئلة استقصائية، واستكشاف زوايا جديدة تتعلق بجيل زد.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 mb-8">
+                    <form id="ai-form" onsubmit="generateAIIdeas(event)" class="flex flex-col gap-4">
+                        <label for="ai-topic" class="text-slate-700 font-semibold text-lg">
+                            ما هو الموضوع أو الظاهرة التي تود دراستها حول جيل زد؟
+                        </label>
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <input 
+                                type="text" 
+                                id="ai-topic"
+                                required
+                                placeholder="مثال: تأثير الألعاب الإلكترونية على التحصيل الدراسي، أو وعي جيل زد بالتغير المناخي..." 
+                                class="flex-grow px-4 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-slate-50 focus:bg-white text-base"
+                            />
+                            <button 
+                                type="submit"
+                                id="ai-submit-btn"
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 md:w-auto w-full shadow-lg shadow-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <i id="ai-submit-icon" class="fa-solid fa-sparkles"></i>
+                                <span id="ai-submit-text">توليد أفكار بحثية ✨</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="ai-response-container" class="hidden bg-white rounded-2xl shadow-lg border border-indigo-100 p-8 slide-in-up relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-2 h-full bg-indigo-500"></div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-sparkles text-indigo-500"></i> مقترحات الذكاء الاصطناعي:
+                    </h3>
+                    <div id="ai-response-content" class="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TEAM VIEW ================= -->
+        <div id="view-team" class="view-section slide-in-up hidden py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-4">فريق الباحثين والخبراء</h2>
+                    <div class="w-24 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
+                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto text-lg">
+                        يضم المركز نخبة متميزة من الأكاديميين والمحللين الشباب الذين يمتلكون شغفاً حقيقياً وأدوات منهجية حديثة لفك شفرات الظواهر المعقدة لجيل زد.
+                    </p>
+                </div>
+                <div id="team-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CONTACT VIEW ================= -->
+        <div id="view-contact" class="view-section fade-in hidden py-16 bg-slate-50 min-h-screen">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
+                    
+                    <!-- Contact Info -->
+                    <div class="bg-slate-900 text-white p-10 md:w-2/5 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl"></div>
+                        <div class="relative z-10">
+                            <h2 class="text-3xl font-bold mb-2">تواصل معنا</h2>
+                            <div class="w-16 h-1 bg-teal-500 rounded-full mb-8"></div>
+                            <p class="text-gray-300 mb-10 leading-relaxed text-sm">
+                                نرحب دائماً بتواصل الباحثين، المؤسسات الإعلامية، والمهتمين بشؤون الشباب. يمكنك مراسلتنا لطلب الاستشارات، إجراء المقابلات، أو اقتراح شراكات بحثية.
+                            </p>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-start gap-4">
+                                    <div class="bg-slate-800 p-3 rounded-lg text-teal-400">
+                                        <i class="fa-solid fa-map-pin fa-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-lg">المقر الرئيسي</p>
+                                        <p class="text-gray-400 text-sm">القاهرة، جمهورية مصر العربية</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start gap-4">
+                                    <div class="bg-slate-800 p-3 rounded-lg text-teal-400">
+                                        <i class="fa-solid fa-envelope fa-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-lg">البريد الإلكتروني</p>
+                                        <p class="text-gray-400 text-sm" dir="ltr">info@ccgzs.eg</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12 pt-8 border-t border-slate-700/50 relative z-10">
+                            <p class="text-sm text-gray-400 mb-4">تابعنا وتواصل معنا فورياً عبر:</p>
+                            <div class="flex flex-col gap-4">
+                                <a href="#" class="flex items-center gap-3 bg-green-600 hover:bg-green-500 text-white py-3 px-4 rounded-xl transition-colors font-medium shadow-lg shadow-green-600/20">
+                                    <i class="fa-brands fa-whatsapp fa-xl"></i>
+                                    مراسلة مباشرة عبر واتساب
+                                </a>
+                                <a href="#" class="flex items-center gap-3 bg-blue-600 hover:bg-blue-500 text-white py-3 px-4 rounded-xl transition-colors font-medium shadow-lg shadow-blue-600/20">
+                                    <i class="fa-brands fa-facebook fa-xl"></i>
+                                    صفحتنا الرسمية على فيسبوك
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="p-10 md:w-3/5 bg-white">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-6">أرسل لنا رسالة</h3>
+                        <form class="space-y-6" onsubmit="event.preventDefault(); alert('تم استلام رسالتك بنجاح!');">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل</label>
+                                    <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="الاسم ثلاثي" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                                    <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="mail@example.com" dir="ltr" required />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">الجهة / المؤسسة (اختياري)</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="اسم الجامعة أو المؤسسة الصحفية" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">نص الرسالة أو الاستفسار</label>
+                                <textarea rows="5" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white resize-none" placeholder="كيف يمكننا مساعدتك؟" required></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 px-8 rounded-xl transition-colors shadow-lg">
+                                إرسال الرسالة
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-right">
+                    <div class="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-3 mb-4 opacity-70">
+                        <i class="fa-solid fa-globe fa-2xl hidden md:block text-teal-500 mt-2"></i>
+                        <div>
+                            <span class="font-bold text-xl tracking-tight text-white block">مركز القاهرة لدراسات جيل زد</span>
+                            <span class="text-xs tracking-wider block mt-1 font-sans" dir="ltr">Cairo Center for Gen Z Studies (CCGZS)</span>
+                        </div>
+                    </div>
+                    <p class="text-sm">
+                        © <span id="current-year"></span> جميع الحقوق محفوظة. مركز القاهرة لدراسات جيل زد (مصر).
+                    </p>
+                </div>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-500 hover:text-slate-900 transition-colors">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors">
+                        <i class="fa-brands fa-whatsapp fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
     </footer>
-  );
 
-  // --- محرك التوجيه البسيط (Simple Router) ---
-  const renderContent = () => {
-    if (currentPage === 'article-detail' && selectedArticle) {
-      return <ArticleDetailView />;
-    }
-    switch (currentPage) {
-      case 'home': return <HomeSection />;
-      case 'about': return <AboutSection />;
-      case 'research': return <ResearchSection />;
-      case 'team': return <TeamSection />;
-      case 'contact': return <ContactSection />;
-      default: return <HomeSection />;
-    }
-  };
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- البيانات (Data) ---
+        const teamMembers = [
+            { id: 1, name: 'د. أحمد محمود', role: 'المدير التنفيذي وباحث رئيسي', bio: 'متخصص في علم الاجتماع الرقمي وتأثير التقنية على سلوكيات الشباب.', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=300&h=300' },
+            { id: 2, name: 'أ. سارة عبد الرحمن', role: 'محلل بيانات كمية', bio: 'خبيرة في استطلاعات الرأي وتحليل البيانات الديموغرافية لجيل زد في أفريقيا.', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=300&h=300' },
+            { id: 3, name: 'أ. كريم حسن', role: 'باحث في الأنثروبولوجيا الثقافية', bio: 'يركز على الثقافات الفرعية وأنماط الاستهلاك الثقافي للشباب في الشرق الأوسط.', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300&h=300' },
+        ];
 
-  return (
-    <div dir="rtl" className="min-h-screen bg-white font-sans selection:bg-teal-500 selection:text-white text-right" style={{ fontFamily: "'Cairo', sans-serif" }}>
-      {/* استيراد خط Cairo من Google Fonts */}
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
-          
-          /* تأثيرات حركية بسيطة للتنقل */
-          .fade-in { animation: fadeIn 0.5s ease-in-out; }
-          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-          
-          /* إخفاء شريط التمرير الأفقي إن وجد */
-          body { overflow-x: hidden; }
-        `}
-      </style>
+        const articles = [
+            { 
+                id: 1, 
+                title: 'تأثير الذكاء الاصطناعي على الخيارات المهنية لجيل زد في مصر', 
+                category: 'دراسة استقصائية',
+                date: '١٢ مارس ٢٠٢٦',
+                summary: 'تبحث هذه الدراسة في كيفية إعادة تشكيل أدوات الذكاء الاصطناعي التوليدي لتطلعات الشباب المصري المهنية، وتأثيرها على اختيار التخصصات الجامعية.',
+                content: 'في ظل التحولات التكنولوجية المتسارعة التي يشهدها العالم، يبرز الذكاء الاصطناعي كعامل حاسم في إعادة صياغة سوق العمل المستقبلي. تستند هذه الدراسة إلى استطلاع رأي شمل أكثر من ٥٠٠٠ شاب وشابة من جيل زد في مصر، لتحليل مدى وعيهم بمتطلبات السوق الجديدة. أظهرت النتائج تحولاً كبيراً في التفضيلات المهنية، حيث تراجعت الرغبة في الوظائف التقليدية لصالح التخصصات التقنية والإبداعية التي يصعب على الآلة محاكاتها بالكامل. كما تناقش الدراسة التحديات التي تواجه المؤسسات التعليمية في مواكبة هذا التحول السريع، وتقدم توصيات لصناع السياسات لتطوير مناهج تعليمية تعزز من مهارات التفكير النقدي والمرونة المعرفية.',
+                author: 'د. أحمد محمود',
+                hasPdf: true,
+                image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800&h=400'
+            },
+            { 
+                id: 2, 
+                title: 'أنماط الاستهلاك الرقمي للشباب في دول شمال أفريقيا', 
+                category: 'تقرير تحليلي',
+                date: '٠٥ فبراير ٢٠٢٦',
+                summary: 'تحليل معمق لساعات استخدام منصات التواصل الاجتماعي والمنصات الترفيهية، وتأثيرها على الصحة النفسية والتفاعل الاجتماعي.',
+                content: 'يسلط هذا التقرير التحليلي الضوء على العادات اليومية لجيل زد في استهلاك المحتوى الرقمي عبر شمال أفريقيا، مع التركيز على منصات الفيديو القصير والألعاب التفاعلية. من خلال تتبع وتحليل البيانات السلوكية، يتضح أن هناك ارتباطاً وثيقاً بين ساعات التعرض للشاشات ومستويات القلق الاجتماعي والعزلة. يقدم التقرير مقارنة شاملة بين دول المنطقة، ويبرز الاختلافات الثقافية التي تلعب دوراً في تحديد نوعية المحتوى المفضل. ويختتم التقرير باقتراح آليات لتعزيز "الرفاهية الرقمية" والوعي الذاتي لدى الشباب للتعامل مع الفضاء الإلكتروني بشكل أكثر صحة وتوازناً.',
+                author: 'أ. سارة عبد الرحمن',
+                hasPdf: true,
+                image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800&h=400'
+            },
+            { 
+                id: 3, 
+                title: 'جيل زد والمشاركة السياسية: بين العزوف وإعادة التعريف', 
+                category: 'مقال بحثي',
+                date: '٢٠ يناير ٢٠٢٦',
+                summary: 'قراءة في مفهوم المشاركة السياسية والمجتمعية لدى الشباب، وكيف انتقل التركيز من الساحات التقليدية إلى الفضاءات الرقمية والحملات الإلكترونية.',
+                content: 'غالباً ما يُتهم جيل زد بالعزوف عن المشاركة في الحياة السياسية والعامة بمفهومها الكلاسيكي، إلا أن هذا المقال يجادل بأن هذا الجيل لم يعزف عن المشاركة، بل قام بإعادة تعريفها لتتناسب مع أدواته وقناعاته. يميل الشباب اليوم إلى الانخراط في القضايا ذات البعد الإنساني والبيئي المباشر، مستخدمين وسائل التواصل الاجتماعي كمنصات للحشد والتوعية والضغط. نستعرض في هذا المقال نماذج لحملات رقمية قادها شباب من جيل زد في الشرق الأوسط نجحت في تغيير قرارات مؤسسية، مما يؤكد أننا أمام شكل جديد ومرن من أشكال الفاعلية المجتمعية التي تتجاوز الأطر الحزبية التقليدية.',
+                author: 'أ. كريم حسن',
+                hasPdf: false,
+                image: 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=800&h=400'
+            }
+        ];
 
-      <Navigation />
-      
-      <main className="flex-grow">
-        {renderContent()}
-      </main>
+        let currentSelectedArticle = null;
 
-      <Footer />
-    </div>
-  );
-};
+        // --- تهيئة الواجهة (Initialization) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            renderArticles('home-articles-grid', articles.slice(0, 3));
+            renderArticles('all-articles-grid', articles);
+            renderTeam();
+        });
 
-export default App;
+        // --- محرك التوجيه (Router Logic) ---
+        function navigate(viewId, articleId = null) {
+            // إخفاء القائمة الجانبية في الهاتف إن كانت مفتوحة
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (!mobileMenu.classList.contains('hidden')) {
+                toggleMobileMenu();
+            }
+
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            
+            // تحديث روابط التصفح النشطة
+            if (viewId !== 'article-detail') {
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active-nav-link', 'bg-slate-800', 'text-teal-400', 'border-b-2', 'border-teal-400', 'text-white');
+                    btn.classList.add('text-gray-300');
+                    if (btn.getAttribute('data-target') === viewId) {
+                        btn.classList.add('active-nav-link');
+                        btn.classList.remove('text-gray-300');
+                    }
+                });
+                document.querySelectorAll('[data-mobile-target]').forEach(btn => {
+                    btn.classList.remove('text-teal-400', 'bg-slate-900');
+                    btn.classList.add('text-gray-300', 'hover:bg-slate-700');
+                    if (btn.getAttribute('data-mobile-target') === viewId) {
+                        btn.classList.add('text-teal-400', 'bg-slate-900');
+                        btn.classList.remove('text-gray-300', 'hover:bg-slate-700');
+                    }
+                });
+            }
+
+            // تجهيز قسم عرض المقال
+            if (viewId === 'article-detail' && articleId !== null) {
+                currentSelectedArticle = articles.find(a => a.id === articleId);
+                populateArticleDetail(currentSelectedArticle);
+            }
+
+            // إظهار القسم المطلوب
+            const targetSection = document.getElementById('view-' + viewId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // إغلاق وفتح قائمة الهاتف
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        // --- دوال بناء الواجهة (DOM Manipulation) ---
+        function renderArticles(containerId, data) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = data.map(article => `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col cursor-pointer" onclick="navigate('article-detail', ${article.id})">
+                    <div class="h-56 overflow-hidden relative">
+                        <div class="absolute top-4 right-4 bg-slate-900/90 backdrop-blur-sm text-teal-400 text-xs font-bold px-3 py-1.5 rounded-full z-10 shadow-lg">
+                            ${article.category}
+                        </div>
+                        <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                            <span class="text-white font-bold flex items-center gap-2 hover:text-teal-400">
+                                قراءة كاملة <i class="fa-solid fa-arrow-left"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                            <span>${article.date}</span>
+                            <span>•</span>
+                            <span class="font-medium text-teal-700">${article.author}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                            ${article.title}
+                        </h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">${article.summary}</p>
+                        ${article.hasPdf ? `
+                            <div class="mt-auto pt-4 border-t border-gray-100 flex justify-end">
+                                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                                    <i class="fa-solid fa-download"></i> متاح بصيغة PDF
+                                </span>
+                            </div>
+                        ` : '<div class="mt-auto"></div>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function populateArticleDetail(article) {
+            document.getElementById('detail-category').textContent = article.category;
+            document.getElementById('detail-date').textContent = article.date;
+            document.getElementById('detail-title').textContent = article.title;
+            document.getElementById('detail-author').textContent = article.author;
+            document.getElementById('detail-author-initial').textContent = article.author.charAt(0);
+            document.getElementById('detail-image').src = article.image;
+            document.getElementById('detail-summary').textContent = article.summary;
+            document.getElementById('detail-content').textContent = article.content;
+            
+            const pdfContainer = document.getElementById('detail-pdf-container');
+            if (article.hasPdf) {
+                pdfContainer.classList.remove('hidden');
+            } else {
+                pdfContainer.classList.add('hidden');
+            }
+
+            // Reset AI Summary state when loading new article
+            document.getElementById('ai-summary-container').classList.add('hidden');
+            document.getElementById('ai-summary-content').textContent = '';
+        }
+
+        function renderTeam() {
+            const container = document.getElementById('team-grid');
+            container.innerHTML = teamMembers.map(member => `
+                <div class="bg-slate-50 rounded-2xl p-8 text-center border border-gray-100 hover:border-teal-200 hover:shadow-xl transition-all duration-300 group">
+                    <div class="relative w-40 h-40 mx-auto mb-6">
+                        <div class="absolute inset-0 bg-teal-500 rounded-full blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                        <img src="${member.image}" alt="${member.name}" class="relative w-40 h-40 rounded-full object-cover border-4 border-white shadow-md z-10 grayscale-[20%] group-hover:grayscale-0 transition-all duration-500" />
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">${member.name}</h3>
+                    <p class="text-teal-600 font-semibold mb-4 text-sm">${member.role}</p>
+                    <p class="text-gray-600 text-sm leading-relaxed">${member.bio}</p>
+                </div>
+            `).join('');
+        }
+
+        // --- واجهة برمجة تطبيقات الذكاء الاصطناعي (Gemini API Integration) ---
+        // تحذير: من الأفضل في المشاريع الحقيقية عدم وضع الـ API Key في الكود المصدري الأمامي.
+        const apiKey = ""; 
+
+        async function fetchFromGemini(promptText, systemInstructionText) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: promptText }] }],
+                systemInstruction: { parts: [{ text: systemInstructionText }] }
+            };
+
+            const delays = [1000, 2000, 4000, 8000, 16000]; // Exponential Backoff
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const result = await response.json();
+                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "لم يتم العثور على إجابة.";
+                } catch (error) {
+                    if (i === 4) {
+                        return "عذراً، يبدو أن هناك صعوبة في الاتصال بالذكاء الاصطناعي حالياً. يرجى المحاولة في وقت لاحق.";
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delays[i]));
+                }
+            }
+        }
+
+        // دالة توليد الأفكار البحثية (المساعد الذكي)
+        async function generateAIIdeas(event) {
+            event.preventDefault();
+            const topicInput = document.getElementById('ai-topic').value.trim();
+            if (!topicInput) return;
+
+            const btn = document.getElementById('ai-submit-btn');
+            const icon = document.getElementById('ai-submit-icon');
+            const text = document.getElementById('ai-submit-text');
+            const responseContainer = document.getElementById('ai-response-container');
+            const responseContent = document.getElementById('ai-response-content');
+
+            // حالة التحميل
+            btn.disabled = true;
+            icon.className = "fa-solid fa-spinner fa-spin";
+            text.textContent = "جاري التفكير...";
+            responseContainer.classList.add('hidden');
+
+            const systemPrompt = "أنت مساعد ذكي أكاديمي خبير، تابع لمركز القاهرة لدراسات جيل زد (CCGZS). دورك هو مساعدة الباحثين والمهتمين بجيل زد (Gen Z) من خلال تقديم رؤى، أفكار بحثية، وتلخيصات احترافية ورصينة باللغة العربية الفصحى.";
+            const userPrompt = `أنا باحث/طالب مهتم بدراسات جيل زد (Gen Z). أريد منك اقتراح 3 أفكار أو أسئلة بحثية مبتكرة وعميقة تتعلق بالموضوع التالي: "${topicInput}". يرجى توضيح كل فكرة مع وضع عنوان مقترح وسؤال رئيسي.`;
+
+            const aiResult = await fetchFromGemini(userPrompt, systemPrompt);
+
+            // استعادة حالة الزر وعرض النتيجة
+            responseContent.textContent = aiResult;
+            responseContainer.classList.remove('hidden');
+            
+            btn.disabled = false;
+            icon.className = "fa-solid fa-sparkles";
+            text.textContent = "توليد أفكار بحثية ✨";
+        }
+
+        // دالة تلخيص المقال
+        async function generateSummary() {
+            if (!currentSelectedArticle) return;
+
+            const btn = document.getElementById('ai-summary-btn');
+            const icon = document.getElementById('ai-summary-icon');
+            const text = document.getElementById('ai-summary-text');
+            const container = document.getElementById('ai-summary-container');
+            const content = document.getElementById('ai-summary-content');
+
+            btn.disabled = true;
+            icon.className = "fa-solid fa-spinner fa-spin text-indigo-500";
+            text.textContent = "جاري القراءة والتلخيص...";
+            container.classList.add('hidden');
+
+            const systemPrompt = "أنت مساعد ذكي أكاديمي خبير في تلخيص الدراسات والأبحاث بدقة وتركيز باللغة العربية الفصحى.";
+            const userPrompt = `قم بقراءة هذا المقال الأكاديمي المتعلق بجيل زد، واستخراج أهم 3 استنتاجات رئيسية في شكل نقاط مختصرة ومفيدة للقارئ المتعجل: \n\nالعنوان: ${currentSelectedArticle.title}\nالمحتوى: ${currentSelectedArticle.content}`;
+
+            const aiResult = await fetchFromGemini(userPrompt, systemPrompt);
+
+            content.textContent = aiResult;
+            container.classList.remove('hidden');
+
+            btn.disabled = false;
+            icon.className = "fa-solid fa-sparkles";
+            text.textContent = "تحديث الملخص الذكي ✨";
+        }
+
+    </script>
+</body>
+</html>
