@@ -2,41 +2,8 @@ import React, { useState } from 'react';
 import { 
   Menu, X, BookOpen, Users, Phone, Home, 
   ChevronLeft, Download, MessageCircle, Facebook, 
-  Globe, ArrowLeft, Mail, MapPin, Sparkles, Loader2, Bot
+  Globe, ArrowLeft, Mail, MapPin
 } from 'lucide-react';
-
-// --- دالة الاتصال بـ Gemini API ---
-const callGeminiAPI = async (prompt) => {
-  const apiKey = ""; 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-  
-  const payload = {
-    contents: [{ parts: [{ text: prompt }] }],
-    systemInstruction: {
-      parts: [{ text: "أنت مساعد ذكي أكاديمي تابع لمركز القاهرة لدراسات جيل زد (CCGZS). دورك هو مساعدة الباحثين والمهتمين بجيل زد من خلال تقديم رؤى، أفكار بحثية، وتلخيصات احترافية باللغة العربية الفصحى." }]
-    }
-  };
-
-  let retries = 5;
-  let delay = 1000;
-  while (retries > 0) {
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (!response.ok) throw new Error('API Error');
-      const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || "لم يتم العثور على إجابة.";
-    } catch (error) {
-      retries--;
-      if (retries === 0) return "عذراً، حدث خطأ أثناء الاتصال بالذكاء الاصطناعي. يرجى المحاولة لاحقاً.";
-      await new Promise(resolve => setTimeout(resolve, delay));
-      delay *= 2;
-    }
-  }
-};
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
@@ -108,7 +75,6 @@ const App = () => {
                 { id: 'home', name: 'الرئيسية', icon: Home },
                 { id: 'about', name: 'عن المركز', icon: BookOpen },
                 { id: 'research', name: 'الأبحاث والدراسات', icon: BookOpen },
-                { id: 'ai-assistant', name: 'المساعد البحثي ✨', icon: Bot },
                 { id: 'team', name: 'فريق العمل', icon: Users },
                 { id: 'contact', name: 'التواصل', icon: Phone },
               ].map((item) => (
@@ -150,7 +116,6 @@ const App = () => {
               { id: 'home', name: 'الرئيسية' },
               { id: 'about', name: 'عن المركز' },
               { id: 'research', name: 'الأبحاث والدراسات' },
-              { id: 'ai-assistant', name: 'المساعد البحثي ✨' },
               { id: 'team', name: 'فريق العمل' },
               { id: 'contact', name: 'التواصل' },
             ].map((item) => (
@@ -325,18 +290,6 @@ const App = () => {
   );
 
   const ArticleDetailView = () => {
-    const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
-    const [aiSummary, setAiSummary] = useState('');
-
-    const handleGenerateSummary = async () => {
-      setIsGeneratingSummary(true);
-      setAiSummary('');
-      const prompt = `قم بقراءة هذا المقال واستخراج أهم 3 استنتاجات رئيسية في شكل نقاط مختصرة ومفيدة للقارئ المتعجل: \n\nالعنوان: ${selectedArticle.title}\nالمحتوى: ${selectedArticle.content}`;
-      const response = await callGeminiAPI(prompt);
-      setAiSummary(response);
-      setIsGeneratingSummary(false);
-    };
-
     return (
     <div className="py-12 bg-white min-h-screen animate-in slide-in-from-right-8 duration-500">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -355,50 +308,16 @@ const App = () => {
           <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
             {selectedArticle.title}
           </h1>
-          <div className="flex items-center justify-between pb-8 border-b border-gray-200">
-            <div className="flex items-center gap-4 text-slate-700">
-              <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold">
-                {selectedArticle.author.charAt(0)}
-              </div>
-              <div>
-                <p className="font-bold text-lg">{selectedArticle.author}</p>
-                <p className="text-sm text-gray-500">باحث في مركز القاهرة لدراسات جيل زد (CCGZS)</p>
-              </div>
+          <div className="flex items-center gap-4 text-slate-700 pb-8 border-b border-gray-200">
+            <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold">
+              {selectedArticle.author.charAt(0)}
             </div>
-            
-            {/* زر توليد الملخص بالذكاء الاصطناعي */}
-            <button 
-              onClick={handleGenerateSummary}
-              disabled={isGeneratingSummary}
-              className="hidden md:flex items-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 py-2 px-4 rounded-lg transition-colors font-semibold text-sm disabled:opacity-50"
-            >
-              {isGeneratingSummary ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-              مستخلص الذكاء الاصطناعي ✨
-            </button>
+            <div>
+              <p className="font-bold text-lg">{selectedArticle.author}</p>
+              <p className="text-sm text-gray-500">باحث في مركز القاهرة لدراسات جيل زد (CCGZS)</p>
+            </div>
           </div>
-          
-          {/* زر التوليد للموبايل */}
-          <button 
-              onClick={handleGenerateSummary}
-              disabled={isGeneratingSummary}
-              className="mt-4 w-full flex md:hidden items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 py-3 px-4 rounded-lg transition-colors font-semibold text-sm disabled:opacity-50"
-            >
-              {isGeneratingSummary ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-              استخراج أهم النقاط بالذكاء الاصطناعي ✨
-          </button>
         </div>
-
-        {/* عرض المستخلص الذكي */}
-        {aiSummary && (
-          <div className="mb-8 p-6 bg-gradient-to-l from-indigo-50 to-white border-r-4 border-indigo-500 rounded-l-xl shadow-sm animate-in fade-in duration-500">
-            <h3 className="flex items-center gap-2 text-indigo-800 font-bold text-lg mb-3">
-              <Sparkles className="w-5 h-5" /> أهم الاستنتاجات (بواسطة الذكاء الاصطناعي)
-            </h3>
-            <div className="prose prose-indigo rtl:prose-p:text-right text-indigo-900/80 text-sm whitespace-pre-wrap">
-              {aiSummary}
-            </div>
-          </div>
-        )}
 
         <div className="relative mb-12 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
           <img src={selectedArticle.image} alt="صورة المقال" className="w-full h-auto max-h-[500px] object-cover" />
@@ -436,82 +355,6 @@ const App = () => {
         )}
       </div>
     </div>
-    );
-  };
-
-  const AIAssistantSection = () => {
-    const [topic, setTopic] = useState('');
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [response, setResponse] = useState('');
-
-    const handleGenerate = async (e) => {
-      e.preventDefault();
-      if (!topic.trim()) return;
-      
-      setIsGenerating(true);
-      setResponse('');
-      
-      const prompt = `أنا باحث/طالب مهتم بدراسات جيل زد (Gen Z). أريد منك اقتراح 3 أفكار أو أسئلة بحثية مبتكرة وعميقة تتعلق بالموضوع التالي: "${topic}". 
-      يرجى توضيح كل فكرة مع وضع عنوان مقترح وسؤال رئيسي.`;
-      
-      const aiResult = await callGeminiAPI(prompt);
-      setResponse(aiResult);
-      setIsGenerating(false);
-    };
-
-    return (
-      <div className="py-16 bg-slate-50 min-h-screen animate-in fade-in duration-500">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center p-3 bg-indigo-100 text-indigo-600 rounded-full mb-4">
-              <Bot className="w-8 h-8" />
-            </div>
-            <h2 className="text-4xl font-extrabold text-slate-900 mb-4">المساعد البحثي الذكي ✨</h2>
-            <div className="w-24 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
-            <p className="mt-4 text-gray-600 text-lg max-w-2xl mx-auto">
-              مدعوم بنماذج الذكاء الاصطناعي المتقدمة لمساعدة الباحثين والطلاب على توليد أفكار بحثية، صياغة أسئلة استقصائية، واستكشاف زوايا جديدة تتعلق بجيل زد.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 mb-8">
-            <form onSubmit={handleGenerate} className="flex flex-col gap-4">
-              <label htmlFor="topic" className="text-slate-700 font-semibold text-lg">
-                ما هو الموضوع أو الظاهرة التي تود دراستها حول جيل زد؟
-              </label>
-              <div className="flex flex-col md:flex-row gap-4">
-                <input 
-                  type="text" 
-                  id="topic"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder="مثال: تأثير الألعاب الإلكترونية على التحصيل الدراسي، أو وعي جيل زد بالتغير المناخي..." 
-                  className="flex-grow px-4 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-slate-50 focus:bg-white text-base"
-                />
-                <button 
-                  type="submit"
-                  disabled={isGenerating || !topic.trim()}
-                  className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 md:w-auto w-full shadow-lg shadow-indigo-500/30"
-                >
-                  {isGenerating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-                  توليد أفكار بحثية ✨
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {response && (
-            <div className="bg-white rounded-2xl shadow-lg border border-indigo-100 p-8 animate-in slide-in-from-bottom-4 duration-500 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-2 h-full bg-indigo-500"></div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <Sparkles className="text-indigo-500 w-6 h-6" /> مقترحات الذكاء الاصطناعي:
-              </h3>
-              <div className="prose prose-lg prose-slate rtl:prose-p:text-right max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {response}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
     );
   };
 
@@ -667,7 +510,6 @@ const App = () => {
       case 'home': return <HomeSection />;
       case 'about': return <AboutSection />;
       case 'research': return <ResearchSection />;
-      case 'ai-assistant': return <AIAssistantSection />;
       case 'team': return <TeamSection />;
       case 'contact': return <ContactSection />;
       default: return <HomeSection />;
