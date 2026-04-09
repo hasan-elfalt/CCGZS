@@ -53,7 +53,7 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* اجبار نصوص الذكاء الاصطناعي على التنسيق الأكاديمي */
+        /* التنسيق الأكاديمي للنصوص */
         .academic-prose p {
             text-align: justify;
             text-justify: inter-word;
@@ -61,22 +61,6 @@
             line-height: 2.4;
             font-size: 1.15rem;
             color: #1e293b;
-        }
-        .academic-prose h4 {
-            color: #0f172a;
-            font-weight: 800;
-            font-size: 1.5rem;
-            margin-top: 3rem;
-            margin-bottom: 1.5rem;
-            border-right: 5px solid #4f46e5;
-            padding-right: 1rem;
-            background: linear-to-l(from #f8fafc, to transparent);
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-        }
-        .academic-prose strong {
-            color: #4338ca;
-            font-weight: 700;
         }
     </style>
 </head>
@@ -97,29 +81,42 @@
                     </div>
                 </div>
                 
-                <!-- Menu Button (Visible on all screens) -->
-                <div class="-mr-2 flex">
+                <!-- Desktop Menu -->
+                <div class="hidden lg:block">
+                    <div class="ml-10 flex items-baseline space-x-4 space-x-reverse" id="desktop-nav-links">
+                        <button onclick="navigate('home')" class="nav-btn active-nav-link flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="home">
+                            <i class="fa-solid fa-house"></i> الرئيسية
+                        </button>
+                        <button onclick="navigate('about')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="about">
+                            <i class="fa-solid fa-book-open"></i> عن المركز
+                        </button>
+                        <button onclick="navigate('research')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="research">
+                            <i class="fa-solid fa-file-alt"></i> الأبحاث
+                        </button>
+                        <button onclick="navigate('team')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="team">
+                            <i class="fa-solid fa-users"></i> فريق العمل
+                        </button>
+                        <button onclick="navigate('contact')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="contact">
+                            <i class="fa-solid fa-phone"></i> التواصل
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="-mr-2 flex lg:hidden">
                     <button onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-slate-800 focus:outline-none">
-                        <!-- أيقونة القائمة (ساندوتش) مدمجة لضمان الظهور الدائم -->
-                        <svg id="icon-menu-open" class="block h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <!-- أيقونة الإغلاق (X) مدمجة للظهور عند فتح القائمة -->
-                        <svg id="icon-menu-close" class="hidden h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <i id="mobile-menu-icon" class="fa-solid fa-bars fa-lg"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Dropdown Menu (Visible on all screens when toggled) -->
-        <div id="mobile-menu" class="hidden bg-slate-800 border-b border-teal-500/30">
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-slate-800 border-b border-teal-500/30">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <button onclick="navigate('home')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-teal-400 bg-slate-900" data-mobile-target="home">الرئيسية</button>
                 <button onclick="navigate('about')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="about">عن المركز</button>
                 <button onclick="navigate('research')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="research">الأبحاث والدراسات</button>
-                <button onclick="navigate('ai-assistant')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="ai-assistant">المساعد البحثي ✨</button>
                 <button onclick="navigate('team')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="team">فريق العمل</button>
                 <button onclick="navigate('contact')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="contact">التواصل</button>
             </div>
@@ -240,21 +237,7 @@
                                 <p class="text-sm text-gray-500">باحث في مركز زد لدراسات الأجيال</p>
                             </div>
                         </div>
-                        
-                        <!-- AI Summary Button -->
-                        <button onclick="generateSummary()" id="ai-summary-btn" class="flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 py-2 md:py-2 px-4 rounded-lg transition-colors font-semibold text-sm w-full md:w-auto shadow-sm">
-                            <i id="ai-summary-icon" class="fa-solid fa-microchip"></i>
-                            <span id="ai-summary-text">تحليل نقدي للمقال ✨</span>
-                        </button>
                     </div>
-                </div>
-
-                <!-- AI Summary Output Container -->
-                <div id="ai-summary-container" class="hidden mb-8 p-8 bg-gradient-to-l from-indigo-50/50 to-white border-r-4 border-indigo-600 rounded-l-2xl shadow-md fade-in">
-                    <h3 class="flex items-center gap-3 text-indigo-900 font-bold text-xl mb-6 pb-4 border-b border-indigo-100">
-                        <i class="fa-solid fa-microchip text-indigo-600 fa-lg"></i> القراءة النقدية التحليلية (بواسطة الخبير المنهجي)
-                    </h3>
-                    <div id="ai-summary-content" class="academic-prose text-indigo-950/90"></div>
                 </div>
 
                 <div class="relative mb-12 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
@@ -264,9 +247,6 @@
                 <div class="prose prose-lg max-w-none text-gray-700 leading-loose text-justify mb-16">
                     <p id="detail-summary" class="text-xl text-slate-800 font-medium bg-slate-50 p-6 rounded-r-xl border-r-4 border-slate-300 mb-8"></p>
                     <p id="detail-content" class="text-justify leading-loose"></p>
-                    <p class="mt-8 p-4 bg-gray-50 rounded-lg text-gray-600 italic border border-gray-200">
-                        * إخلاء مسؤولية أكاديمية: هذا النص التوضيحي هو مجرد مقتطف تنفيذي يوضح الهيكل الأكاديمي العام للبحث، وللحصول على تحليل أعمق والاطلاع على المنهجية البحثية الكاملة وكافة المراجع المعتمدة، يرجى التكرم بمراجعة النسخة الأصلية من الدراسة المتوفرة للتحميل أدناه.
-                    </p>
                 </div>
 
                 <div id="detail-pdf-container" class="hidden bg-slate-900 rounded-2xl p-8 text-center text-white shadow-2xl relative overflow-hidden border border-teal-500/30">
@@ -283,129 +263,6 @@
                             تحميل الدراسة الكاملة (PDF)
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= AI ASSISTANT VIEW ================= -->
-        <div id="view-ai-assistant" class="view-section fade-in hidden py-16 bg-slate-50 min-h-screen">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <div class="inline-flex items-center justify-center p-4 bg-indigo-900 text-indigo-400 rounded-2xl mb-6 shadow-lg shadow-indigo-900/20">
-                        <i class="fa-solid fa-microchip fa-2xl"></i>
-                    </div>
-                    <h2 class="text-4xl font-extrabold text-slate-900 mb-4">المساعد البحثي المتقدم ✨</h2>
-                    <div class="w-24 h-1.5 bg-indigo-600 mx-auto rounded-full"></div>
-                    <p class="mt-6 text-gray-700 text-lg max-w-3xl mx-auto leading-relaxed">
-                        نظام منهجي متكامل مصمم خصيصاً ليحاكي أسلوب التفكير العميق للباحثين. يمكنك من خلاله بناء هيكل بحثي متين لرسالتك، أو تأليف بحوث مطولة (فصلاً بفصل) مع تأصيل نظري دقيق ومراجع موثقة بالصفحات.
-                    </p>
-                </div>
-
-                <!-- Tabs for AI Tools -->
-                <div class="flex flex-wrap justify-center gap-4 mb-8">
-                    <button onclick="switchAITab('outline')" id="tab-btn-outline" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-md transition-colors flex items-center gap-2">
-                        <i class="fa-solid fa-network-wired"></i> تصميم الهيكل المنهجي
-                    </button>
-                    <button onclick="switchAITab('chapter')" id="tab-btn-chapter" class="bg-white text-slate-700 hover:bg-slate-100 border border-gray-200 px-6 py-3 rounded-xl font-bold shadow-sm transition-colors flex items-center gap-2">
-                        <i class="fa-solid fa-pen-nib"></i> الباحث المشارك (تأليف الفصول المطولة)
-                    </button>
-                </div>
-
-                <!-- TAB 1: Outline Builder -->
-                <div id="ai-tab-outline" class="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 md:p-10 mb-8 relative overflow-hidden transition-all duration-300">
-                    <div class="absolute top-0 right-0 w-full h-2 bg-gradient-to-l from-indigo-600 to-teal-400"></div>
-                    <form id="ai-form-outline" onsubmit="generateAIIdeas(event)" class="flex flex-col gap-6">
-                        <div>
-                            <label for="ai-topic" class="block text-slate-800 font-bold text-xl mb-3">
-                                1. حدد الظاهرة الاجتماعية أو الديموغرافية المراد دراستها بدقة:
-                            </label>
-                            <input 
-                                type="text" 
-                                id="ai-topic"
-                                placeholder="مثال: تأثير استهلاك المحتوى القصير (Short-form Video) على الذاكرة العاملة لجيل ألفا..." 
-                                class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-indigo-600 outline-none transition-all bg-gray-50 focus:bg-white text-lg shadow-inner"
-                            />
-                        </div>
-                        <div>
-                            <label for="ai-angle" class="block text-slate-800 font-bold text-xl mb-3">
-                                2. اختر العدسة التحليلية لتوجيه الخبير المنهجي:
-                            </label>
-                            <select id="ai-angle" class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-indigo-600 outline-none transition-all bg-gray-50 focus:bg-white text-lg font-medium text-gray-700 appearance-none cursor-pointer">
-                                <option value="سوسيولوجية">عدسة سوسيولوجية (علم الاجتماع والتحولات الثقافية)</option>
-                                <option value="سيكولوجية">عدسة سيكولوجية (علم النفس المعرفي والسلوكي)</option>
-                                <option value="أنثروبولوجية">عدسة أنثروبولوجية (الإثنوغرافيا الرقمية والممارسات اليومية)</option>
-                                <option value="اقتصادية">عدسة اقتصادية سياسية (سوق العمل، الاستهلاك، والمشاركة)</option>
-                            </select>
-                        </div>
-                        <div class="pt-4">
-                            <button 
-                                type="submit"
-                                id="ai-submit-btn-outline"
-                                class="w-full bg-slate-900 hover:bg-indigo-700 text-white font-bold py-5 px-8 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 text-xl shadow-xl hover:shadow-indigo-600/30 disabled:opacity-70 disabled:cursor-not-allowed group"
-                            >
-                                <i id="ai-submit-icon-outline" class="fa-solid fa-microchip group-hover:scale-110 transition-transform"></i>
-                                <span id="ai-submit-text-outline">بناء الهيكل البحثي والتأصيل النظري ✨</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- TAB 2: Long Chapter Writer -->
-                <div id="ai-tab-chapter" class="hidden bg-white rounded-3xl shadow-xl border border-gray-200 p-8 md:p-10 mb-8 relative overflow-hidden transition-all duration-300">
-                    <div class="absolute top-0 right-0 w-full h-2 bg-gradient-to-l from-teal-500 to-indigo-600"></div>
-                    <div class="mb-6 p-4 bg-teal-50 border-r-4 border-teal-500 rounded-l-lg">
-                        <p class="text-teal-900 font-semibold mb-2"><i class="fa-solid fa-circle-info"></i> آلية كتابة الأبحاث المطولة (120 صفحة فأكثر):</p>
-                        <p class="text-teal-800 text-sm leading-relaxed">نظراً للقيود التقنية لمحركات الذكاء الاصطناعي في حجم الإخراج دفعة واحدة، قمنا بتصميم هذه الأداة لتكون <strong>"باحثك المشارك"</strong>. قم بإدخال عنوان البحث الشامل، ثم أدخل تفاصيل <strong>فصل واحد فقط</strong> في كل مرة. سيكتب النظام نصوصاً أكاديمية مطولة، وموثقة بالمراجع وأرقام الصفحات، ومصاغة بجمل متصلة عميقة. بجمع هذه الفصول معاً، يمكنك استكمال مؤلفك الضخم.</p>
-                    </div>
-                    <form id="ai-form-chapter" onsubmit="generateLongChapter(event)" class="flex flex-col gap-6">
-                        <div>
-                            <label for="ai-book-title" class="block text-slate-800 font-bold text-xl mb-3">
-                                1. عنوان البحث أو الكتاب الشامل:
-                            </label>
-                            <input 
-                                type="text" 
-                                id="ai-book-title"
-                                placeholder="مثال: التحولات السيكولوجية لجيل زد في عصر الخوارزميات..." 
-                                class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-teal-500 outline-none transition-all bg-gray-50 focus:bg-white text-lg shadow-inner"
-                            />
-                        </div>
-                        <div>
-                            <label for="ai-chapter-details" class="block text-slate-800 font-bold text-xl mb-3">
-                                2. عنوان ومحاور الفصل المراد تأليفه الآن:
-                            </label>
-                            <textarea 
-                                id="ai-chapter-details"
-                                rows="4"
-                                placeholder="مثال: الفصل الثاني: أثر التعرض المستمر للفيديو القصير على الذاكرة العاملة. المحاور: 1. تعريف الذاكرة العاملة. 2. ميكانيكية الإدمان الرقمي. 3. استعراض دراسات سابقة..." 
-                                class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-teal-500 outline-none transition-all bg-gray-50 focus:bg-white text-lg shadow-inner resize-none"
-                            ></textarea>
-                        </div>
-                        <div class="pt-4">
-                            <button 
-                                type="submit"
-                                id="ai-submit-btn-chapter"
-                                class="w-full bg-slate-900 hover:bg-teal-600 text-white font-bold py-5 px-8 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 text-xl shadow-xl hover:shadow-teal-500/30 disabled:opacity-70 disabled:cursor-not-allowed group"
-                            >
-                                <i id="ai-submit-icon-chapter" class="fa-solid fa-pen-nib group-hover:-translate-y-1 transition-transform"></i>
-                                <span id="ai-submit-text-chapter">البدء في تأليف هذا الفصل (كتابة أكاديمية مطولة) ✨</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Unified Output Container -->
-                <div id="ai-response-container" class="hidden bg-white rounded-3xl shadow-2xl border border-indigo-100 p-8 md:p-12 slide-in-up relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-3 h-full bg-indigo-600" id="output-border"></div>
-                    <div class="flex items-center gap-4 mb-8 pb-6 border-b-2 border-gray-100">
-                        <div class="bg-indigo-100 p-3 rounded-full text-indigo-700" id="output-icon-bg">
-                            <i class="fa-solid fa-book-journal-whills fa-2xl" id="output-icon"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl md:text-3xl font-extrabold text-slate-900" id="output-title">المسودة المنهجية المقترحة</h3>
-                            <p class="text-gray-500 mt-1">تمت الصياغة وفقاً للضوابط الأكاديمية والمراجع العلمية الدقيقة</p>
-                        </div>
-                    </div>
-                    <div id="ai-response-content" class="academic-prose text-slate-800"></div>
                 </div>
             </div>
         </div>
@@ -564,31 +421,6 @@
             navigate('home');
         });
 
-        // --- التبديل بين تبويبات المساعد الذكي ---
-        function switchAITab(tabName) {
-            const tabOutline = document.getElementById('ai-tab-outline');
-            const tabChapter = document.getElementById('ai-tab-chapter');
-            const btnOutline = document.getElementById('tab-btn-outline');
-            const btnChapter = document.getElementById('tab-btn-chapter');
-
-            // إخفاء الحاوية الخاصة بالنتائج عند التبديل
-            document.getElementById('ai-response-container').classList.add('hidden');
-
-            if (tabName === 'outline') {
-                tabOutline.classList.remove('hidden');
-                tabChapter.classList.add('hidden');
-                
-                btnOutline.className = "bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-md transition-colors flex items-center gap-2";
-                btnChapter.className = "bg-white text-slate-700 hover:bg-slate-100 border border-gray-200 px-6 py-3 rounded-xl font-bold shadow-sm transition-colors flex items-center gap-2";
-            } else {
-                tabChapter.classList.remove('hidden');
-                tabOutline.classList.add('hidden');
-                
-                btnChapter.className = "bg-teal-600 text-white px-6 py-3 rounded-xl font-bold shadow-md transition-colors flex items-center gap-2";
-                btnOutline.className = "bg-white text-slate-700 hover:bg-slate-100 border border-gray-200 px-6 py-3 rounded-xl font-bold shadow-sm transition-colors flex items-center gap-2";
-            }
-        }
-
         // --- محرك التوجيه (Router Logic) ---
         function navigate(viewId, articleId = null) {
             const mobileMenu = document.getElementById('mobile-menu');
@@ -631,23 +463,15 @@
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
-            const iconOpen = document.getElementById('icon-menu-open');
-            const iconClose = document.getElementById('icon-menu-close');
-            
+            const icon = document.getElementById('mobile-menu-icon');
             if (menu.classList.contains('hidden')) {
-                // فتح القائمة وعرض علامة X
                 menu.classList.remove('hidden');
-                iconOpen.classList.add('hidden');
-                iconOpen.classList.remove('block');
-                iconClose.classList.remove('hidden');
-                iconClose.classList.add('block');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
             } else {
-                // إغلاق القائمة والعودة لعلامة القائمة الأصلية
                 menu.classList.add('hidden');
-                iconClose.classList.add('hidden');
-                iconClose.classList.remove('block');
-                iconOpen.classList.remove('hidden');
-                iconOpen.classList.add('block');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
             }
         }
 
@@ -698,9 +522,6 @@
             } else {
                 pdfContainer.classList.add('hidden');
             }
-
-            document.getElementById('ai-summary-container').classList.add('hidden');
-            document.getElementById('ai-summary-content').innerHTML = '';
         }
 
         function renderTeam() {
@@ -716,168 +537,6 @@
                     <p class="text-gray-600 text-sm leading-relaxed">${member.bio}</p>
                 </div>
             `).join('');
-        }
-
-        // --- العقل الأكاديمي للذكاء الاصطناعي (Gemini API Integration) ---
-        const apiKey = ""; 
-
-        async function fetchFromGemini(promptText, systemInstructionText) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: promptText }] }],
-                systemInstruction: { parts: [{ text: systemInstructionText }] }
-            };
-
-            const delays = [1000, 2000, 4000, 8000, 16000]; 
-            for (let i = 0; i < 5; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-                    const result = await response.json();
-                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "<p>عذراً، لم أتمكن من صياغة التحليل في الوقت الحالي.</p>";
-                } catch (error) {
-                    if (i === 4) return "<p>حدث خطأ في الاتصال بالخوادم الأكاديمية. يرجى المحاولة لاحقاً.</p>";
-                    await new Promise(resolve => setTimeout(resolve, delays[i]));
-                }
-            }
-        }
-
-        // 1. هندسة الأوامر (Prompts) للخبير المنهجي (بناء الهيكل)
-        async function generateAIIdeas(event) {
-            event.preventDefault();
-            const topicInput = document.getElementById('ai-topic').value.trim();
-            const angleSelect = document.getElementById('ai-angle').value;
-            if (!topicInput) return;
-
-            const btn = document.getElementById('ai-submit-btn-outline');
-            const icon = document.getElementById('ai-submit-icon-outline');
-            const text = document.getElementById('ai-submit-text-outline');
-            const responseContainer = document.getElementById('ai-response-container');
-            const responseContent = document.getElementById('ai-response-content');
-
-            btn.disabled = true;
-            icon.className = "fa-solid fa-spinner fa-spin";
-            text.textContent = "جاري التنقيب في الأدبيات والتأصيل المنهجي...";
-            responseContainer.classList.add('hidden');
-
-            // تغيير المظهر ليتناسب مع قسم الخبير المنهجي (لون نيلي)
-            document.getElementById('output-border').className = "absolute top-0 right-0 w-3 h-full bg-indigo-600";
-            document.getElementById('output-icon-bg').className = "bg-indigo-100 p-3 rounded-full text-indigo-700";
-            document.getElementById('output-title').textContent = "المسودة المنهجية المقترحة";
-
-            const systemPrompt = `أنت خبير في المنهجية البحثية والتأصيل النظري (Research Methodologist) وتعمل بمركز زد لدراسات الأجيال. 
-            قواعدك الصارمة التي يمنع كسرها:
-            1. يُمنع منعاً باتاً استخدام النقاط القصيرة أو الرموز (Bullet points or dashes). إجابتك يجب أن تكون عبارة عن مقال أكاديمي مكون من فقرات نثرية متماسكة (Prose).
-            2. يجب أن تستخدم جملاً طويلة، ومعبرة، ومترابطة منطقياً في الشرح والتحليل لتعكس الطابع الأكاديمي الرصين.
-            3. يجب أن تقوم بتأصيل الفكرة نظرياً، بمعنى ربطها بنظرية سوسيولوجية أو سيكولوجية كلاسيكية أو حديثة لتأسيسها بشكل علمي.
-            4. الأهم: يجب أن تقوم بتزويد الباحث بمرجع علمي تأسيسي دقيق (كتاب مرجعي أو ورقة علمية كلاسيكية معترف بها في هذا المجال) مع ذكر رقم فصل افتراضي أو نطاق صفحات تقريبي لتوجيه الباحث مباشرة للمصدر.
-            5. قم بتنسيق الإجابة باستخدام وسوم HTML التوضيحية (استخدم <h4> للعناوين الفرعية، و <p> للفقرات المتصلة).`;
-
-            const userPrompt = `بصفتي باحثاً أكاديمياً دقيقاً، أرغب في بناء هيكل بحثي مبدئي حول الظاهرة التالية: "${topicInput}". 
-            أريد منك دراسة هذه الظاهرة تحديداً من خلال (العدسة ال${angleSelect}).
-            
-            أرجو منك صياغة مقال منهجي متصل يغطي المحاور التالية دون أي نقاط منفصلة:
-            أولاً، اقترح عنواناً أكاديمياً رصيناً للدراسة مع تحديد إشكالية البحث الأساسية. 
-            ثانياً، قدم لي التأصيل النظري الأنسب لمقاربة هذه الظاهرة من الزاوية ال${angleSelect} مع شرح كيف تفسر هذه النظرية ظاهرتي. 
-            ثالثاً، اقترح تصميماً منهجياً (Methodology) وأدوات بحثية مناسبة لقياس هذه الظاهرة لدى الأجيال الصاعدة. 
-            رابعاً وأخيراً، قم بتزويدي بمرجع علمي تأسيسي وموثوق يمكنني الاستناد إليه، مع تحديد نطاق صفحات محدد للاطلاع عليه.`;
-
-            const aiResult = await fetchFromGemini(userPrompt, systemPrompt);
-            const cleanResult = aiResult.replace(/```html/g, '').replace(/```/g, '');
-
-            responseContent.innerHTML = cleanResult;
-            responseContainer.classList.remove('hidden');
-            
-            btn.disabled = false;
-            icon.className = "fa-solid fa-microchip";
-            text.textContent = "بناء هيكل بحثي لظاهرة أخرى ✨";
-        }
-
-        // 2. هندسة الأوامر (Prompts) لتأليف الفصول المطولة (الباحث المشارك)
-        async function generateLongChapter(event) {
-            event.preventDefault();
-            const bookTitle = document.getElementById('ai-book-title').value.trim();
-            const chapterDetails = document.getElementById('ai-chapter-details').value.trim();
-            if (!bookTitle || !chapterDetails) return;
-
-            const btn = document.getElementById('ai-submit-btn-chapter');
-            const icon = document.getElementById('ai-submit-icon-chapter');
-            const text = document.getElementById('ai-submit-text-chapter');
-            const responseContainer = document.getElementById('ai-response-container');
-            const responseContent = document.getElementById('ai-response-content');
-
-            btn.disabled = true;
-            icon.className = "fa-solid fa-spinner fa-spin";
-            text.textContent = "جاري التأليف الموسع وكتابة المحتوى الأكاديمي الموثق (قد تستغرق العملية وقتاً للتعمق)...";
-            responseContainer.classList.add('hidden');
-
-            // تغيير المظهر ليتناسب مع قسم الباحث المشارك (لون تركوازي)
-            document.getElementById('output-border').className = "absolute top-0 right-0 w-3 h-full bg-teal-500";
-            document.getElementById('output-icon-bg').className = "bg-teal-100 p-3 rounded-full text-teal-700";
-            document.getElementById('output-title').textContent = "النص الأكاديمي المطول (مسودة الفصل)";
-
-            const systemPrompt = `أنت أكاديمي وباحث مشارك (Co-Author) من النخبة في "مركز زد لدراسات الأجيال". مهمتك الآن هي كتابة "فصل كامل" من كتاب أو دراسة مطولة (طولها الإجمالي يتجاوز 120 صفحة، وأنت تكتب الآن أحد فصولها).
-            
-            قواعد التأليف الصارمة التي يجب الالتزام بها حرفياً:
-            1. الإسهاب والعمق: خذ وقتك والمساحة الكاملة لكتابة أطول نص ممكن (آلاف الكلمات إن أمكن). اشرح كل فكرة باستفاضة وتفكيك وتفصيل ممل وعميق يليق برسائل الدكتوراه.
-            2. بنية النص: ممنوع استخدام أي نقاط أو قوائم (NO BULLET POINTS). يجب أن تكون الكتابة نثرية (Prose) على شكل فقرات طويلة، وجمل معقدة، ومترابطة بشكل احترافي.
-            3. التوثيق داخل المتن (In-text Citation): يجب عليك دعم كل ادعاء أو فكرة رئيسية باقتباس أو مرجع علمي دقيق. يجب أن تذكر اسم المؤلف وسنة النشر، ورقم الصفحة أو الفصل (مثال: يجادل بورديو بأن التمايز الثقافي... (بورديو، 1979، ص 124)). 
-            4. التنسيق: استخدم وسوم HTML (<h4>) لعناوين المباحث الفرعية داخل الفصل، و (<p>) للفقرات، لتظهر بشكل منسق على صفحة الويب.`;
-
-            const userPrompt = `بصفتك باحثاً مشاركاً، أطلب منك كتابة نص أكاديمي مطول ومعمق وحصري لهذا الفصل. 
-            عنوان البحث الشامل الذي نؤلفه هو: "${bookTitle}".
-            الفصل المطلوب منك تأليفه الآن ومحاوره هي: "${chapterDetails}".
-            
-            أرجو منك الشروع في كتابة المباحث الخاصة بهذا الفصل بإسهاب شديد، مع تقديم الحجج والبراهين السوسيولوجية أو السيكولوجية اللازمة، والاعتماد المطلق على الاستشهادات المرجعية المتضمنة لأرقام الصفحات كما تم توجيهك. تذكر أن المطلوب هو نص متصل، طويل جداً، ومترابط، خالٍ تماماً من النقاط القصيرة أو الاختصارات المخلة.`;
-
-            const aiResult = await fetchFromGemini(userPrompt, systemPrompt);
-            const cleanResult = aiResult.replace(/```html/g, '').replace(/```/g, '');
-
-            responseContent.innerHTML = cleanResult;
-            responseContainer.classList.remove('hidden');
-            
-            btn.disabled = false;
-            icon.className = "fa-solid fa-pen-nib";
-            text.textContent = "البدء في تأليف فصل آخر ✨";
-        }
-
-        // 3. هندسة الأوامر (Prompts) للتحليل النقدي للمقالات (في صفحة المقال)
-        async function generateSummary() {
-            if (!currentSelectedArticle) return;
-
-            const btn = document.getElementById('ai-summary-btn');
-            const icon = document.getElementById('ai-summary-icon');
-            const text = document.getElementById('ai-summary-text');
-            const container = document.getElementById('ai-summary-container');
-            const content = document.getElementById('ai-summary-content');
-
-            btn.disabled = true;
-            icon.className = "fa-solid fa-spinner fa-spin text-indigo-600";
-            text.textContent = "جاري إجراء القراءة النقدية الأكاديمية...";
-            container.classList.add('hidden');
-
-            const systemPrompt = `أنت باحث أكاديمي خبير ومراجع علمي (Peer Reviewer) في مركز زد لدراسات الأجيال.
-            قواعدك الصارمة:
-            1. لا تستخدم أبداً النقاط المختصرة (No Bullet Points).
-            2. قم بصياغة إجابتك في فقرات نثرية متصلة باستخدام جمل طويلة ومترابطة تحليلياً.
-            3. قم بتنسيق الإجابة باستخدام وسوم <p> للفقرات، و <h4> للعناوين الجانبية.
-            4. لا تكتفِ بتلخيص ما كُتب، بل قدم قراءة نقدية (Critical Reading) توضح أهمية هذا البحث في سياق دراسات الأجيال، وما هي الفجوة المعرفية التي يحاول سدها.`;
-
-            const userPrompt = `بصفتك مراجعاً علمياً، قم بقراءة هذا المقال الأكاديمي المرفق نصه أدناه. أطلب منك تقديم قراءة نقدية تحليلية مكثفة تستخرج من خلالها الجوهر المعرفي للدراسة، مع إبراز الإضافة العلمية التي يقدمها هذا النص لفهمنا للأجيال الصاعدة. أرجو صياغة ردك في مقال متصل من فقرتين أو ثلاث فقرات طويلة ومترابطة. \n\nعنوان المقال: ${currentSelectedArticle.title}\nالنص الكامل: ${currentSelectedArticle.content}`;
-
-            const aiResult = await fetchFromGemini(userPrompt, systemPrompt);
-            const cleanResult = aiResult.replace(/```html/g, '').replace(/```/g, '');
-
-            content.innerHTML = cleanResult;
-            container.classList.remove('hidden');
-
-            btn.disabled = false;
-            icon.className = "fa-solid fa-microchip";
-            text.textContent = "تحديث القراءة النقدية ✨";
         }
 
     </script>
