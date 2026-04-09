@@ -81,38 +81,22 @@
                     </div>
                 </div>
                 
-                <!-- Desktop Menu -->
-                <div class="hidden lg:block">
-                    <div class="ml-10 flex items-baseline space-x-4 space-x-reverse" id="desktop-nav-links">
-                        <button onclick="navigate('home')" class="nav-btn active-nav-link flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="home">
-                            <i class="fa-solid fa-house"></i> الرئيسية
-                        </button>
-                        <button onclick="navigate('about')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="about">
-                            <i class="fa-solid fa-book-open"></i> عن المركز
-                        </button>
-                        <button onclick="navigate('research')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="research">
-                            <i class="fa-solid fa-file-alt"></i> الأبحاث
-                        </button>
-                        <button onclick="navigate('team')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="team">
-                            <i class="fa-solid fa-users"></i> فريق العمل
-                        </button>
-                        <button onclick="navigate('contact')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-slate-800 hover:text-white" data-target="contact">
-                            <i class="fa-solid fa-phone"></i> التواصل
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Mobile Menu Button -->
-                <div class="-mr-2 flex lg:hidden">
+                <!-- Menu Button (Visible on all screens) -->
+                <div class="-mr-2 flex">
                     <button onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-slate-800 focus:outline-none">
-                        <i id="mobile-menu-icon" class="fa-solid fa-bars fa-lg"></i>
+                        <svg id="icon-menu-open" class="block h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="icon-menu-close" class="hidden h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-slate-800 border-b border-teal-500/30">
+        <!-- Dropdown Menu (Visible on all screens when toggled) -->
+        <div id="mobile-menu" class="hidden bg-slate-800 border-b border-teal-500/30">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <button onclick="navigate('home')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-teal-400 bg-slate-900" data-mobile-target="home">الرئيسية</button>
                 <button onclick="navigate('about')" class="block w-full text-right px-3 py-4 rounded-md text-base font-medium border-b border-slate-700 text-gray-300 hover:text-white hover:bg-slate-700" data-mobile-target="about">عن المركز</button>
@@ -463,15 +447,21 @@
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
-            const icon = document.getElementById('mobile-menu-icon');
+            const iconOpen = document.getElementById('icon-menu-open');
+            const iconClose = document.getElementById('icon-menu-close');
+            
             if (menu.classList.contains('hidden')) {
                 menu.classList.remove('hidden');
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
+                iconOpen.classList.add('hidden');
+                iconOpen.classList.remove('block');
+                iconClose.classList.remove('hidden');
+                iconClose.classList.add('block');
             } else {
                 menu.classList.add('hidden');
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
+                iconClose.classList.add('hidden');
+                iconClose.classList.remove('block');
+                iconOpen.classList.remove('hidden');
+                iconOpen.classList.add('block');
             }
         }
 
